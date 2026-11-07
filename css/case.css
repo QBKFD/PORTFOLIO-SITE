@@ -47,6 +47,21 @@
 }
 .case__meta a { color: var(--text-dim); text-decoration: none; }
 .case__meta a:hover { color: var(--accent); }
+.case__soon { color: var(--accent-dim); }
+.case__note {
+  margin: 18px 0 0;
+  max-width: 68ch;
+  padding-left: 14px;
+  border-left: 2px solid var(--line);
+  font-size: 0.95rem;
+  color: var(--text-dim);
+}
+.case__note a {
+  color: var(--text-body);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+.case__note a:hover { color: var(--accent); border-color: var(--accent); }
 
 /* ---------- the path ---------- */
 .path {
