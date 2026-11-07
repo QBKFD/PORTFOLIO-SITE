@@ -69,7 +69,7 @@
     var fin = smoothstep(introP);
     // survivors: fly in from scattered start
     g.globalAlpha = 0.92 * fin;
-    g.fillStyle = "rgba(226,186,74,1)";
+    g.fillStyle = "rgba(137,207,240,1)";
     drawGroup(0, function (d) { return [d.sx + (d.tx - d.sx) * fin, d.sy + (d.ty - d.sy) * fin]; });
     // failures: bloom outward from the centre as the ring appears
     var ap = smoothstep(appearP);

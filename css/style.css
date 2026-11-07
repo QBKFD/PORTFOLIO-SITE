@@ -11,8 +11,8 @@
   --text-body: #b9bac1;   /* body copy */
   --text-dim: #8b8c93;    /* secondary */
   --grey-line: #a8acb6;   /* animation greys */
-  --accent: #e2ba4a;      /* yellow, THE accent, used sparingly */
-  --accent-dim: #c9a83c;  /* yellow for small labels/eyebrows */
+  --accent: #89cff0;      /* baby blue, THE accent, used sparingly */
+  --accent-dim: #6cb6de;  /* deeper baby blue for small labels/eyebrows */
 
   --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
   --font-brand: "Archivo", "Helvetica Neue", Arial, sans-serif;

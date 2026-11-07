@@ -17,7 +17,7 @@
   var resampleBtn = document.getElementById("dviz-resample");
   var segBtns = root.querySelectorAll(".dviz__seg button");
 
-  var ACCENT = "226,186,74", GREY = "139,140,147", LINE = "168,172,182", TEXT = "240,240,242";
+  var ACCENT = "137,207,240", GREY = "139,140,147", LINE = "168,172,182", TEXT = "240,240,242";
 
   // ---- model ----
   var N = 64, WIN = 10, BASE = 0.15, SIG = 0.42, CHG = Math.round(N * 0.6), DROP = 0.34;

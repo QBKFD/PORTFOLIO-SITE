@@ -150,7 +150,7 @@
     var strEff = str * (1 - e);             // cursor influence fades with scroll
 
     drawDust(alphaMul);                     // dust sits between ground and contours
-    var bandC = 0.29 + 0.20 * Math.sin(t * 0.008 * 6.28); // migrating yellow band
+    var bandC = 0.29 + 0.20 * Math.sin(t * 0.008 * 6.28); // migrating blue band
     var opx = (sx - 0.62) * 0.03 * strEff;
     var opy = (sy - 0.40) * 0.03 * strEff;
 
@@ -187,7 +187,7 @@
         g.lineWidth = 0.6 + bright * 0.9;
       } else {
         g.strokeStyle = yel
-          ? "rgba(226,186,74," + strokeA + ")"
+          ? "rgba(137,207,240," + strokeA + ")"
           : "rgba(168,172,182," + strokeA + ")";
         g.lineWidth = yel ? 0.85 : 0.6;
       }

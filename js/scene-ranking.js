@@ -76,7 +76,7 @@
     comp.forEach(function (c) {
       var diff = Math.abs(c.leftRank - c.rightRank) / (N - 1);
       var a = 0.12 + 0.72 * (1 - diff);
-      g.strokeStyle = "rgba(226,186,74," + a.toFixed(3) + ")";
+      g.strokeStyle = "rgba(137,207,240," + a.toFixed(3) + ")";
       g.beginPath(); g.moveTo(xL, yLeft(c)); g.lineTo(xR, c.curY); g.stroke();
     });
     // nodes
@@ -91,8 +91,8 @@
   }
   function node(x, y) {
     g.beginPath(); g.arc(x, y, 6, 0, 6.2832);
-    g.fillStyle = "rgba(226,186,74,0.16)"; g.fill();
-    g.lineWidth = 1; g.strokeStyle = "rgba(226,186,74,0.75)"; g.stroke();
+    g.fillStyle = "rgba(137,207,240,0.16)"; g.fill();
+    g.lineWidth = 1; g.strokeStyle = "rgba(137,207,240,0.75)"; g.stroke();
   }
 
   // ---- loop (only while right nodes are settling) ----

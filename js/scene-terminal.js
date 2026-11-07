@@ -17,7 +17,7 @@
   var replayBtn = document.getElementById("tviz-replay");
   var segBtns = root.querySelectorAll(".tviz__seg button");
 
-  var ACCENT = "226,186,74", SELL = "150,175,203", GREY = "139,140,147", LINE = "168,172,182";
+  var ACCENT = "137,207,240", SELL = "214,150,140", GREY = "139,140,147", LINE = "168,172,182";
 
   // ---- scenarios (content for the cards) ----
   var SCEN = {

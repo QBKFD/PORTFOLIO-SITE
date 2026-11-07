@@ -17,7 +17,7 @@
   var monthBtn = document.getElementById("pviz-month");
   var noteEl = document.getElementById("pviz-note");
 
-  var ACCENT = "226,186,74", SELL = "150,175,203", GREY = "139,140,147", LINE = "168,172,182";
+  var ACCENT = "137,207,240", SELL = "214,150,140", GREY = "139,140,147", LINE = "168,172,182";
   function voteColor(v) { return v > 0 ? ACCENT : v < 0 ? SELL : GREY; }
 
   var analysts = [
