@@ -59,15 +59,50 @@
         <div class="cards">
 
           <article class="card">
-            <h3 class="card__title">Self-Evolving Multi-Agentic AI Trading System</h3>
+            <h3 class="card__title">OPARLI: a falsification-first research system</h3>
             <p class="card__body">
-              A multi-agent, LLM-assisted system trading XAUUSD. A three-agent pipeline
-              runs on fixed UTC scan times, persists everything to PostgreSQL, and reports
-              through a Vue dashboard wired to IBKR. Underneath it, a two-layer learning
-              architecture lets the system revise its own approach over time.
+              A research system for commodities, validated on gold so far. Every claim goes
+              through the same path: a pre-registration committed before any code touches an
+              outcome, development data, one look at a holdout, then a single forward test on
+              data that is sealed in code. Everything from October 2026 on can't be read until
+              that final test.
             </p>
-            <p class="card__tech mono">Python · Polars · PostgreSQL · Vue · IBKR</p>
-            <a class="row__more link" href="projects/agentic-trading/index.html">Explore the path →</a>
+            <p class="card__body">
+              What runs live is deliberately simple: a deterministic level scanner on an EC2
+              host, connected to IB Gateway, that sends a Telegram alert on the first touch of
+              12 level types and journals my take-or-skip reply. Nothing trades. Behind it sit
+              a point-in-time datafeed (IBKR to Redis to SQLite), the HAR volatility model that
+              won its study, and a LangGraph rebuild of the agents: visual, technical,
+              sentiment and GEX analysts vote blind, then discuss, and a meta rule I set decides.
+              The agents are built for shadow decisions only and are not deployed yet.
+            </p>
+            <p class="card__tech mono">Python · LangGraph · IBKR · Redis · SQLite · Docker · AWS</p>
+            <p class="links">
+              <a class="link" href="https://github.com/QBKFD/OPARLI-LLM-FORWARD" target="_blank" rel="noopener">GitHub ↗</a>
+              <a class="link" href="projects/agentic-trading/index.html">Explore the first version →</a>
+            </p>
+          </article>
+
+          <article class="card">
+            <h3 class="card__title">Quant hackathon: a bot-only competition platform</h3>
+            <p class="card__body">
+              The platform behind a quant hackathon. Teams write bots and submit code, the
+              platform runs every match in a sandbox, and the website shows leaderboards and
+              replays. Nobody plays by hand. There are two games: Kelly Survival, a bet-sizing
+              game where each bot is scored against an oracle over many secret paths, and
+              Reconnaissance Blind Chess, chess where you can't see your opponent's pieces,
+              played against house bots and against other teams.
+            </p>
+            <p class="card__body">
+              Done so far: both game engines, pure and seeded, so the same seed and the same
+              bots give a byte-identical replay; an out-of-process bot protocol with one
+              validation boundary per game, so a late or crashing bot can't break a match;
+              the participant kits for both games; a replay viewer; and house bots that were
+              red-teamed before the event. Rankings are never decided by one game
+              or one path. Next are the sandbox checks on Linux and the API and leaderboard.
+            </p>
+            <p class="card__tech mono">Python · Docker · reconchess · Stockfish · pytest · hypothesis</p>
+            <p class="status mono"><span class="dot" aria-hidden="true">●</span>Repository private, for obvious reasons: it holds the house bots and the scoring.</p>
           </article>
 
         </div>
@@ -84,6 +119,7 @@
 
           <article class="row">
             <h3 class="row__title">IC/IR Alpha-mining Engine</h3>
+            <p class="status mono"><span class="dot" aria-hidden="true">●</span>Incoming · write-up live, code not public yet</p>
             <p class="row__body">
               Headless fitness function for ranking alpha signals by whether they actually
               predict returns: cross-sectional rank IC, IR, and decay over thousands of
@@ -93,20 +129,78 @@
               ~1.9× faster on complete panels; the null-aware path is next.
             </p>
             <p class="row__note mono">Polars · NumPy · Vectorized ranking · Planted-signal validation · Thread-pinned benchmarks</p>
-            <a class="row__more link" href="projects/ic-ir/index.html">Explore the path →</a>
+            <p class="links">
+              <a class="link" href="projects/ic-ir/index.html">Explore the path →</a>
+            </p>
           </article>
 
           <article class="row">
-            <h3 class="row__title">Four hypotheses, four nulls</h3>
+            <h3 class="row__title">The OPARLI ledger: what survived pre-registration</h3>
             <p class="row__body">
-              I ran four pre-registered microstructure studies on gold: session continuation,
-              price levels against matched random controls, time-series momentum, and
-              liquidity sweeps. All came back null or economically negligible, and that is the
-              result I trust most. Methodology fixed before the answer, levels tested against
-              matched random controls, out-of-sample window sealed. A clean null is worth more
-              than a backtest that was allowed to cheat.
+              Studies on gold and silver, run in order, each with its plan committed before any
+              result and a report whose first line is the verdict. Most came back null, and they
+              stay in the ledger. Price levels behaved no differently from matched placebo
+              levels (0 of 6 hypotheses supported), and the confirmation on then-sealed
+              2024–2026 data found the opposite of the predicted effect. Jump-model regimes
+              lost to simple volatility terciles. Runs of small candles added nothing.
             </p>
-            <p class="row__note mono">Sealed 2020–2026 · Matched controls · Pre-registered · FDR-corrected</p>
+            <p class="row__body">
+              Three things held up. A HAR volatility model beats the plug-in estimate by 16 to
+              18% on QLIKE, in 24 of 24 folds. Telling it that a CPI, payrolls or FOMC release
+              falls in the window cuts its error by another 18.6% at four hours. And breaks of
+              the last swing high or low follow through less often than on a random walk: found
+              on gold, replicated on silver, though fading them doesn't pay even before costs.
+              A clean null is worth more than a backtest that was allowed to cheat.
+            </p>
+            <p class="row__note mono">Pre-registered · Sealed from Oct 2026, enforced in code · Holdout read once · BH-corrected</p>
+            <p class="links">
+              <a class="link" href="https://github.com/QBKFD/OPARLI-LLM-FORWARD/blob/main/research/README.md" target="_blank" rel="noopener">Every study and report on GitHub ↗</a>
+            </p>
+          </article>
+
+          <article class="row">
+            <h3 class="row__title">Can neural networks forecast commodities? Mostly, no</h3>
+            <p class="row__sub mono">MSc thesis · reworked after submission</p>
+            <p class="row__body">
+              My master's thesis asked whether recurrent networks, attention hybrids and a
+              Transformer can forecast next-day returns of gold, silver and copper from market
+              and macro features. After submitting, I went back and fixed what made the results
+              look better or worse than they were: macro data used before its release date, a
+              target shifted by a day, scalers fitted on the test years. Then I added the naive
+              baselines the thesis lacked. The honest answer: over 2020–2024, none of the 24
+              model and metal combinations beats a "no change" forecast.
+            </p>
+            <p class="row__body">
+              Macro surprises do move metals, a one standard deviation upside surprise in US
+              payrolls takes 39 bp off gold, but the move is over by the next day. What these
+              inputs predict is how much prices move, not which way: a HAR model beats the
+              historical average on volatility for all three metals, and no network beats HAR.
+            </p>
+            <p class="row__note mono">TensorFlow · PyTorch · XGBoost · Walk-forward · Diebold-Mariano · Model Confidence Set</p>
+            <p class="links">
+              <a class="link" href="https://github.com/QBKFD/COMMODITIES-FORECAST-NN" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
+          </article>
+
+          <article class="row">
+            <h3 class="row__title">Deposit pass-through under stress: NL and BE savings, 2022–2026</h3>
+            <p class="row__sub mono">Personal project · public ECB data only</p>
+            <p class="row__body">
+              Banks price non-maturing deposits with pass-through models, usually an error
+              correction model fitted on a long history. That history was mostly falling rates
+              and the zero floor. So I estimated the standard model family on data ending in
+              2021 and forecast Dutch and Belgian savings rates through the 2022 hikes and the
+              2024 cuts, with no refitting and every month built on the model's own previous
+              prediction. The training window mattered more than the model: extending it from
+              2013 to 2021 cut the Dutch linear model's error by about two thirds. The
+              cointegration the model assumes never shows up at 5%. Every specification beats
+              "rates never move", but none significantly beats a one-number rule, and the slow
+              models flip the sign of their error between the two phases.
+            </p>
+            <p class="row__note mono">ECM family · Dynamic forecasts · Diebold-Mariano · NII impact</p>
+            <p class="links">
+              <a class="link" href="https://github.com/QBKFD/NMD-PASSTHROUGH-BACKTEST" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
           </article>
 
           <article class="row">
@@ -123,6 +217,9 @@
               points. Of nine published XAI methods evaluated, only four ran reliably: the
               tooling lags the literature. Full comparison in the repo.
             </p>
+            <p class="links">
+              <a class="link" href="https://github.com/QBKFD/XAI-ML" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
           </article>
 
           <article class="row">
@@ -138,6 +235,9 @@
               Full methodology and the stock-impact extension in the repo.
             </p>
             <p class="row__note mono">FinBERT · NLP · TF-IDF · NER · LDA</p>
+            <p class="links">
+              <a class="link" href="https://github.com/QBKFD/NLP-RNN-SENTIMENT-STOCK-ANALYSIS" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
           </article>
 
         </div>
