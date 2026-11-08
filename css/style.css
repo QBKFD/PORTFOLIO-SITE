@@ -226,6 +226,18 @@ button:focus-visible {
   margin: 16px 0 0;
   max-width: 28ch;
 }
+/* the hero headline: the tagline on its own, no wordmark above it */
+.hero__headline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--text);
+  font-size: clamp(2.1rem, 5.4vw, 3.7rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  margin: 0;
+  max-width: 15em;
+  text-wrap: balance;
+}
 /* forced two-line break on wider screens; on narrow screens the line
    wraps naturally and the non-breaking "and break." keeps "and" from hanging */
 .hero__brk { display: none; }

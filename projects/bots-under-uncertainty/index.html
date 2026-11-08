@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bots Under Uncertainty · OPARLI</title>
+  <meta name="description" content="A sandboxed competition platform where bots play Kelly Survival and Reconnaissance Blind Chess: the games, the match engine, calibration, red teaming and tests." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/case.css" />
+</head>
+<body>
+
+  <!-- nav: on case pages the wordmark is always shown -->
+  <header class="nav is-scrolled" id="nav">
+    <div class="nav__inner">
+      <a href="../../index.html" class="nav__name">OPARLI</a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="../../index.html#projects">Projects</a>
+        <span class="nav__sep" aria-hidden="true">·</span>
+        <a href="../../index.html#research">Research</a>
+        <span class="nav__sep" aria-hidden="true">·</span>
+        <a href="../../index.html#about">About</a>
+        <span class="nav__sep" aria-hidden="true">·</span>
+        <a href="../../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="case">
+    <a href="../../index.html#projects" class="case__back">← Back to projects</a>
+
+    <header class="case__head">
+      <p class="eyebrow eyebrow--accent">Project · competition platform</p>
+      <h1 class="case__title">Bots Under Uncertainty</h1>
+      <p class="case__standfirst">
+        The platform behind a quant hackathon, where teams compete with code instead of
+        clicks. Two games, one question: how well does your bot decide when it can't see
+        everything?
+      </p>
+      <p class="case__meta mono">
+        Python · Docker · reconchess · Stockfish · pytest · hypothesis
+        &nbsp;·&nbsp; <span class="case__soon">Repository private, for obvious reasons</span>
+      </p>
+      <p class="case__note">
+        The repository holds the house bots, the hidden game parameters and the scoring, so
+        it stays private. This page covers how the platform works and how it was tested,
+        not what's inside the house bots.
+      </p>
+    </header>
+
+    <ol class="path">
+
+      <li class="stage" id="idea">
+        <span class="stage__node" aria-hidden="true"></span>
+        <p class="stage__label">01 · The idea</p>
+        <h2 class="stage__title">Compete with code, not clicks</h2>
+        <p class="stage__body">
+          Teams get the rules and a starter kit, write a bot, and upload it. The server plays
+          it against house bots and against other teams, and nobody plays by hand. Both games
+          hide something on purpose. In one, you don't know your edge. In the other, you
+          can't see the board. What gets ranked is how well a bot acts on what it can't see.
+        </p>
+      </li>
+
+      <li class="stage" id="kelly">
+        <span class="stage__node" aria-hidden="true"></span>
+        <p class="stage__label">02 · Kelly Survival</p>
+        <h2 class="stage__title">Size the bet without knowing the edge</h2>
+        <p class="stage__body">
+          Each round, a bot bets a fraction of its bankroll on a biased coin. The win
+          probability is hidden and moves, slowly and in sudden jumps, and a signal hints at
+          each outcome with a reliability that also changes. Every bot starts with $1,000 and
+          plays 500 rounds; drop below $10 and it's out. The score is how far it finishes
+          behind an oracle that sees the hidden values, taken as the median over many paths
+          so that one lucky run can't win it.
+        </p>
+        <p class="stage__body">
+          Underneath it is the Kelly criterion. Bet too little and you leave growth on the
+          table. Bet too much and the swings eat you, even with a real edge. Slide the bet
+          size and watch what happens to the same 40 coin sequences.
+        </p>
+
+        <div class="viz kviz" id="kviz" role="group" aria-label="Interactive: bet sizing on a biased coin">
+          <div class="kviz__stage">
+            <div class="kviz__fanbox">
+              <p class="viz__head mono">bankroll over 500 rounds, log scale</p>
+              <canvas class="kviz__fan" aria-hidden="true"></canvas>
+            </div>
+            <div class="kviz__curvebox">
+              <p class="viz__head mono">growth per round vs bet size</p>
+              <canvas class="kviz__curve" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <div class="viz__controls">
+            <label class="viz__slider">bet size
+              <input type="range" id="kviz-mult" min="0" max="300" step="5" value="100" aria-label="Bet size as a multiple of the Kelly fraction" />
+              <b id="kviz-multv">1.00× Kelly</b>
+            </label>
+            <button class="viz__btn" type="button" id="kviz-new">New coins</button>
+          </div>
+          <div class="viz__readout mono">
+            <span>median final <b id="kviz-med">$0</b></span>
+            <span>knocked out <b id="kviz-ruin">0%</b></span>
+            <span>bet per round <b id="kviz-f">0%</b></span>
+          </div>
+          <p class="viz__note">
+            Illustrative: a fixed 55% coin, where full Kelly bets 10% of the bankroll. In the
+            game the probability is hidden and moves, so a bot has to estimate its edge before
+            it can size the bet. The oracle doesn't have to.
+          </p>
+        </div>
+      </li>
+
+      <li class="stage" id="rbc">
+        <span class="stage__node" aria-hidden="true"></span>
+        <p class="stage__label">03 · Reconnaissance Blind Chess</p>
+        <h2 class="stage__title">Play chess on a board you can't see</h2>
+        <p class="stage__body">
+          Reconnaissance Blind Chess is chess where you never see your opponent's pieces.
+          Each turn you sense one 3×3 window, then move. There's no check: you win by
+          capturing the king. A good bot keeps track of every board the opponent could have
+          and senses where those boards disagree the most. Compute is bounded on purpose:
+          one core, a game clock, a capped engine, and the bot is paused between its turns
+          so it can't think on the opponent's time.
+        </p>
+        <p class="stage__body">
+          Below, White has played e4 and Black has replied, but you can't see how. That
+          leaves 21 possible boards. Pick a square to sense and see how many survive.
+        </p>
+
+        <div class="viz cviz" id="cviz" role="group" aria-label="Interactive: sensing in Reconnaissance Blind Chess">
+          <div class="cviz__stage">
+            <canvas class="cviz__board" aria-label="Chess board: click a square to sense the 3 by 3 window around it"></canvas>
+            <div class="cviz__side">
+              <div class="cviz__count">
+                <span class="mono">possible boards</span>
+                <b id="cviz-count">21</b>
+              </div>
+              <p class="cviz__msg" id="cviz-msg">Hover to preview a sense, click to use it. Shaded squares are where Black's pieces might be.</p>
+              <div class="cviz__btns">
+                <button class="viz__btn" type="button" id="cviz-best">Show the best sense</button>
+                <button class="viz__btn" type="button" id="cviz-new">New game</button>
+              </div>
+            </div>
+          </div>
+          <p class="viz__note">
+            Black had 21 options: 16 pawn moves, 4 knight moves, or passing, which the rules
+            allow. The "best sense" is the window that leaves the fewest boards on average.
+          </p>
+        </div>
+      </li>
+
+      <li class="stage" id="engine">
+        <span class="stage__node" aria-hidden="true"></span>
+        <p class="stage__label">04 · The match engine</p>
+        <h2 class="stage__title">A bot can crash. The match can't.</h2>
+        <p class="stage__body">
+          Every bot runs as its own process, outside the engine, and talks to it only in
+          JSON lines. Each answer passes through a single validation boundary per game. A
+          malformed, late or crashed answer costs a strike: the bot bets nothing or passes
+          that turn. Three strikes and it's out, and the match carries on and writes its
+          replay. The engines themselves are pure: state and action in, new state out, no
+          input or output of their own. So no bot, however broken, can take a match down.
+        </p>
+
+        <div class="viz aviz" id="aviz" role="group" aria-label="Animation: how the match engine handles faulty bots">
+          <canvas class="aviz__canvas" aria-hidden="true"></canvas>
+          <div class="viz__controls">
+            <div class="viz__seg" role="group" aria-label="Choose a bot">
+              <button type="button" data-bot="honest" class="is-active">Honest bot</button>
+              <button type="button" data-bot="garbage">Sends garbage</button>
+              <button type="button" data-bot="hang">Hangs</button>
+              <button type="button" data-bot="crash">Crashes</button>
+            </div>
+          </div>
+          <p class="viz__note">
+            Four of the 33 chaos bots used in testing. Others flood the output, fork-bomb the
+            container, hog memory, try the network or keep thinking between their turns.
+          </p>
+        </div>
+
+        <p class="stage__body stage__body--gap">
+          All randomness is drawn from a seed before any bot acts, and scoring seeds come
+          from a cryptographic source, so nobody can guess them from what they've seen. The
+          same seed and the same bots always give a byte-identical replay, so any result can
+          be replayed and checked.
+        </p>
+
+        <div class="viz hviz" id="hviz" role="group" aria-label="Interactive: the same seed gives the same replay">
+          <div class="hviz__seed mono">seed <b id="hviz-seed">…</b></div>
+          <div class="hviz__runs">
+            <div class="hviz__run"><span class="mono">run A · replay hash</span><b id="hviz-a">…</b></div>
+            <div class="hviz__run"><span class="mono">run B · replay hash</span><b id="hviz-b">…</b></div>
+          </div>
+          <div class="viz__controls">
+            <span class="hviz__verdict mono" id="hviz-verdict">identical</span>
+            <button class="viz__btn" type="button" id="hviz-again">Replay both</button>
+            <button class="viz__btn" type="button" id="hviz-seedbtn">New seed</button>
+          </div>
+        </div>
+      </li>
+
+      <li class="stage" id="calibration">
+        <span class="stage__node" aria-hidden="true"></span>
+        <p class="stage__label">05 · Calibration</p>
+        <h2 class="stage__title">Luck must not decide the ranking</h2>
+        <p class="stage__body">
+          Before a game is allowed on the server, a ladder of reference bots plays it over
+          many seeds, and the ranking is resampled again and again. If the order changes
+          between resamples, luck is deciding and the game's parameters change. Degenerate
+          strategies must lose: a bot that never bets, or always bets the same fraction, has
+          to finish below every bot that tries to learn. Each bot's tier is set from what it
+          does before it ever plays, never from its results.
+        </p>
+
+        <div class="viz lviz" id="lviz" role="group" aria-label="Interactive: bootstrap resampling of a reference ladder">
+          <p class="viz__head mono">median regret vs the oracle, one dot per resample (higher is better)</p>
+          <canvas class="lviz__canvas" aria-hidden="true"></canvas>
+          <div class="viz__controls">
+            <label class="viz__slider">paths per resample
+              <input type="range" id="lviz-n" min="0" max="5" step="1" value="3" aria-label="Number of paths per resample" />
+              <b id="lviz-nv">100</b>
+            </label>
+            <button class="viz__btn" type="button" id="lviz-run">Resample</button>
+          </div>
+          <div class="viz__readout mono">
+            <span>tier order held in <b id="lviz-held">0%</b> of resamples</span>
+          </div>
+          <p class="viz__note">
+            Illustrative numbers. With a handful of paths the tiers blur and luck picks the
+            winner. On the real Kelly ladder the tier order held in at least 95% of resamples
+            from 100 paths up, and the leaderboard scores every bot on many more.
+          </p>
+        </div>
+      </li>
+
+      <li class="stage" id="redteam">
+        <span class="stage__node" aria-hidden="true"></span>
+        <p class="stage__label">06 · Red teaming</p>
+        <h2 class="stage__title">Attack it before the participants do</h2>
+        <p class="stage__body">
+          The house bots have to be hard to beat, and the only honest way to check is to
+          attack them. A red team is a person with an AI coding tool, working in a separate
+          session, with exactly what participants get: the rules and the starter kit. Their
+          bots are saved against the clock, at 30 minutes and at the end, and play the house
+          bots over many games. The sessions that build the engine never write these bots,
+          because they know the hidden parts.
+        </p>
+        <p class="stage__body">
+          When a red team gets too close, the house bot gets better. A new version replaces
+          the old one only if it passes a promotion rule written down before the games are
+          played. Then a fresh red team goes again.
+        </p>
+
+        <div class="viz rtviz" id="rtviz" role="group" aria-label="Animation: the red-team loop">
+          <canvas class="rtviz__canvas" aria-hidden="true"></canvas>
+          <p class="rtviz__caption" id="rtviz-caption" aria-live="polite"></p>
+          <div class="viz__controls">
+            <div class="rtviz__dots" id="rtviz-dots" aria-hidden="true"></div>
+            <button class="viz__btn" type="button" id="rtviz-play">Pause</button>
+            <button class="viz__btn" type="button" id="rtviz-next">Next step</button>
+          </div>
+        </div>
+      </li>
+
+      <li class="stage" id="tests">
+        <span class="stage__node" aria-hidden="true"></span>
+        <p class="stage__label">07 · Tests</p>
+        <h2 class="stage__title">Tested like it will be attacked</h2>
+        <p class="stage__body">
+          Tests come first for engine and protocol code, and every milestone ends green.
+          Invariants have their own tests: the bankroll never goes negative, a stake never
+          exceeds the bankroll, and money is counted in whole cents with no floats.
+          Property-based tests throw random input at the engines and the validation
+          boundaries. A layer test fails the build if the engine imports anything it
+          shouldn't. A refactor that shouldn't change behaviour has to reproduce a
+          fingerprint of results.
+        </p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat__num"><span data-countup="513" data-decimals="0">0</span></div>
+            <div class="stat__label">tests across 48 files</div>
+          </div>
+          <div class="stat">
+            <div class="stat__num"><span data-countup="33" data-decimals="0">0</span></div>
+            <div class="stat__label">chaos bots that try to break a match</div>
+          </div>
+          <div class="stat">
+            <div class="stat__num"><span data-countup="15" data-decimals="0">0</span></div>
+            <div class="stat__label">property-based tests</div>
+          </div>
+          <div class="stat">
+            <div class="stat__num"><span data-countup="1" data-decimals="0">0</span></div>
+            <div class="stat__label">validation boundary per game</div>
+          </div>
+        </div>
+        <p class="stat__caption">
+          CI runs on Linux on every push; macOS and Windows run on demand.
+        </p>
+      </li>
+
+      <li class="stage" id="status">
+        <span class="stage__node" aria-hidden="true"></span>
+        <p class="stage__label">08 · Where it stands</p>
+        <h2 class="stage__title">Built, tested, red-teamed. Server next.</h2>
+        <p class="stage__body">
+          Done: both game engines, the participant kits, the replay viewer, the reference
+          ladders, and house bots that have been through red teams. Next: the sandbox checks
+          on a Linux server, then the API and the leaderboard. No participant's code runs on
+          a server until those checks pass.
+        </p>
+      </li>
+
+    </ol>
+  </main>
+
+  <script src="../../js/case.js" defer></script>
+  <script src="../../js/scene-kelly.js" defer></script>
+  <script src="../../js/scene-rbc.js" defer></script>
+  <script src="../../js/scene-arena.js" defer></script>
+  <script src="../../js/scene-ladder.js" defer></script>
+  <script src="../../js/scene-redteam.js" defer></script>
+</body>
+</html>
