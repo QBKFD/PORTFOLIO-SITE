@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bots Under Uncertainty · OPARLI</title>
+  <title>Production Bayesian Bots · OPARLI</title>
   <meta name="description" content="A sandboxed competition platform where bots play Kelly Survival and Reconnaissance Blind Chess: the games, the match engine, calibration, red teaming and tests." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,11 +36,11 @@
 
     <header class="case__head">
       <p class="eyebrow eyebrow--accent">Project · competition platform</p>
-      <h1 class="case__title">Bots Under Uncertainty</h1>
+      <h1 class="case__title">Production Bayesian Bots</h1>
       <p class="case__standfirst">
         The platform behind a quant hackathon, where teams compete with code instead of
-        clicks. Two games, one question: how well does your bot decide when it can't see
-        everything?
+        clicks. Two games, one skill: update what you believe as evidence comes in, then
+        act on it, live, against a clock.
       </p>
       <p class="case__meta mono">
         Python · Docker · reconchess · Stockfish · pytest · hypothesis
@@ -63,7 +63,9 @@
           Teams get the rules and a starter kit, write a bot, and upload it. The server plays
           it against house bots and against other teams, and nobody plays by hand. Both games
           hide something on purpose. In one, you don't know your edge. In the other, you
-          can't see the board. What gets ranked is how well a bot acts on what it can't see.
+          can't see the board. The bots that do well are Bayesian in spirit: they keep a
+          belief about what they can't see, update it with every round or every sense, and
+          act on it.
         </p>
       </li>
 
